@@ -102,3 +102,45 @@ const template = `
 `
 
 export default games;
+// Parse the JSON string into an actual JavaScript array
+const GAMES_JSON = JSON.parse(games);
+
+// Grab the raisedCard element
+const raisedCard = document.getElementById("total-raised");
+
+// Calculate the total amount pledged using reduce
+const totalRaised = GAMES_JSON.reduce((total, game) => total + game.pledged, 0);
+
+// Set the inner HTML to display the total amount raised with a dollar sign
+raisedCard.innerHTML = `$${totalRaised.toLocaleString()}`;
+const fundedGames = GAMES_JSON.filter(game => game.pledged >= game.goal);
+const unfundedGames = GAMES_JSON.filter(game => game.pledged < game.goal);
+
+const totalMoneyRaised = fundedGames.reduce((total, game) => total + game.pledged, 0);
+
+// Display the message
+const message = `${totalMoneyRaised} has been raised for ${fundedGames.length} games, 
+and ${unfundedGames.length} game${unfundedGames.length !== 1 ? 's' : ''} remain unfunded.`;
+
+console.log(message);
+// Sort the games based on the pledged amount in descending order
+const sortedGames = GAMES_JSON.sort((a, b) => b.pledged - a.pledged);
+
+// Destructure the sorted games to get the top two funded games
+const [topGame, secondGame] = sortedGames;
+
+// Get the containers for the top and second games
+const firstGameContainer = document.getElementById("first-game");
+const secondGameContainer = document.getElementById("second-game");
+
+// Create new elements for the names of the top two funded games
+const topGameName = document.createElement('p');
+topGameName.textContent = topGame.name;
+
+// Create new elements for the second most funded game
+const secondGameName = document.createElement('p');
+secondGameName.textContent = secondGame.name;
+
+// Append the game names to their respective containers
+firstGameContainer.appendChild(topGameName);
+secondGameContainer.appendChild(secondGameName);
