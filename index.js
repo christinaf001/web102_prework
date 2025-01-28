@@ -141,40 +141,46 @@ allBtn.addEventListener("click", showAllGames);
 const descriptionContainer = document.getElementById("description-container");
 
 // use filter or reduce to count the number of unfunded games
+const unfundedGamesCount = GAMES_JSON.filter(game => game.pledged < game.goal).length;
 
 
 // create a string that explains the number of unfunded games using the ternary operator
-
+const unfundedGamesText = `
+    A total of ${unfundedGamesCount} ${unfundedGamesCount === 1 ? "game remains" : "games remain"} unfunded. 
+    We encourage you to explore these projects and help bring their visions to life!
+`;
 
 // create a new DOM element containing the template string and append it to the description container
-
+const descriptionElement = document.createElement("p");
+descriptionElement.textContent = unfundedGamesText;
+descriptionContainer.appendChild(descriptionElement);
 /************************************************************************************
  * Challenge 7: Select & display the top 2 games
  * Skills used: spread operator, destructuring, template literals, sort 
  */
 document.addEventListener("DOMContentLoaded", function() {
-    // Get the containers for the most funded games
+    // Ensure the DOM elements exist before attempting to append children
     const firstGameContainer = document.getElementById("first-game");
     const secondGameContainer = document.getElementById("second-game");
 
-    // Check if the containers exist
+    // Check if the elements exist in the DOM
     if (!firstGameContainer || !secondGameContainer) {
-        console.error("Error: Could not find the 'first-game' or 'second-game' container elements.");
-        return; // Exit the function early if the elements are not found
+        console.error("Error: 'first-game' or 'second-game' elements not found in the DOM.");
+        return;
     }
 
-    // Sort the games by pledged amount (highest to lowest)
+    // Sort the games by pledged amount in descending order
     const sortedGames = GAMES_JSON.sort((item1, item2) => item2.pledged - item1.pledged);
 
-    // Destructure to grab the top two funded games
+    // Destructure to grab the first two games
     const [mostFundedGame, secondMostFundedGame, ...rest] = sortedGames;
 
-    // Create and append the most funded game element
+    // Create and append the most funded game name
     const firstGameElement = document.createElement("p");
     firstGameElement.textContent = `🥇 Top Funded Game: ${mostFundedGame.name}`;
     firstGameContainer.appendChild(firstGameElement);
 
-    // Create and append the second most funded game element
+    // Create and append the second most funded game name
     const secondGameElement = document.createElement("p");
     secondGameElement.textContent = `🥈 Runner Up: ${secondMostFundedGame.name}`;
     secondGameContainer.appendChild(secondGameElement);
